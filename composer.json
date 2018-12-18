@@ -1,0 +1,25 @@
+{
+    "name": "pn13/fluent-json",
+    "description": "A PHP library to fluently interact with JSON API's",
+    "type": "library",
+    "require": {
+        "ixudra/curl": "^6.16",
+        "salsify/json-streaming-parser": "^8.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^4.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pim Stoit",
+            "email": "stoit007@hotmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "PN13\\FluentJSON\\": "src/"
+        }
+    }
+}
