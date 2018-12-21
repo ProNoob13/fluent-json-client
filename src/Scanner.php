@@ -6,47 +6,70 @@
 
     class Scanner implements ListenerInterface
     {
-        /** @var array */
-        private $items;
+        /** @var string[] */
+        protected $path = [];
 
-        public function __construct(string $containerTag, string $countTag = null)
+        /** @var array */
+        protected $attributes = [];
+
+        /** @var string */
+        protected $itemsKey;
+
+        /** @var string|null */
+        protected $countKey;
+
+        /** @var string|null */
+        protected $currentKey = null;
+
+        /** @var int|null */
+        protected $count = null;
+
+        /** @var Result|null */
+        protected $result = null;
+
+        public function __construct(string $itemsKey, string $countKey = null)
         {
-            // this is where the fun starts
+            $this->itemsKey = $itemsKey;
+            $this->countKey = $countKey;
         }
 
         public function startDocument(): void
         {
-            $this->items = [];
+            $this->count = null;
+            $this->result = null;
         }
 
         public function endDocument(): void
         {
-            // TODO: Implement endDocument() method.
+            $this->currentKey = null;
+            $this->path = [];
         }
 
         public function startObject(): void
         {
-            // TODO: Implement startObject() method.
+
         }
 
         public function endObject(): void
         {
-            // TODO: Implement endObject() method.
+
         }
 
         public function startArray(): void
         {
-            // TODO: Implement startArray() method.
+            if($this->currentKey === $this->itemsKey) {
+                $this->result = new Resultset($this->attributes)
+            }
         }
 
         public function endArray(): void
         {
-            // TODO: Implement endArray() method.
+
         }
 
         public function key(string $key): void
         {
-            // TODO: Implement key() method.
+            $this->currentKey = $key;
         }
 
         /**
@@ -54,11 +77,15 @@
          */
         public function value($value)
         {
-            // TODO: Implement value() method.
+            if(count($this->path) === 0 && $this->currentKey === $this->countKey) {
+                $this->count = $value;
+            } else {
+                $this->attributes[$this->currentKey] = $value;
+            }
         }
 
         public function whitespace(string $whitespace): void
         {
-            // TODO: Implement whitespace() method.
+            // ignore whitespace
         }
     }
