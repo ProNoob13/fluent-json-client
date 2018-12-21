@@ -7,7 +7,7 @@
 
     class Endpoint implements ArrayAccess
     {
-        /** @var Endpoint */
+        /** @var Endpoint|null */
         protected $parent;
 
         /** @var string */
@@ -20,9 +20,9 @@
         protected $name;
 
         /** @var array */
-        private $data;
+        private $data = [];
 
-        protected function __construct(Endpoint $parent, string $name, string $method = API::METHOD_GET)
+        protected function __construct(Endpoint $parent = null, string $name = null, string $method = API::METHOD_GET)
         {
             $this->parent = $parent;
             $this->method = $method;
@@ -52,7 +52,7 @@
         protected function instantiate(string $name): Endpoint
         {
             $name = strtolower(preg_replace('/(?<=[a-z])(?=[A-Z])/', '-', $name));
-            return new static($this, $name, $this->method);
+            return new Endpoint($this, $name, $this->method);
         }
 
         /**
@@ -61,7 +61,7 @@
          * @param array $data
          * @return mixed
          */
-        final public function execute(string $URI, string $method = API::METHOD_GET, array $data = [])
+        protected function execute(string $URI, string $method = API::METHOD_GET, array $data = [])
         {
             if(!$this->parent) {
                 throw new LogicException('Endpoint should be a child of API');

@@ -12,6 +12,5 @@ A PHP library to fluently interact with JSON API's
 ```
 
 ## To Do
-- Improved HTTP method support
 - Result pagination support
 - JSON abstraction
