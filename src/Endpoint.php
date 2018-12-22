@@ -5,6 +5,10 @@
     use ArrayAccess;
     use LogicException;
 
+    /**
+     * Class Endpoint
+     * @package PN13\FluentJSON
+     */
     class Endpoint implements ArrayAccess
     {
         /** @var Endpoint|null */

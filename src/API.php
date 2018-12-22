@@ -3,7 +3,12 @@
     namespace PN13\FluentJSON;
 
     use JsonStreamingParser\Parser;
+    use PN13\FluentJSON\Result\Item;
 
+    /**
+     * Class API
+     * @package PN13\FluentJSON
+     */
     class API extends Endpoint
     {
         const METHOD_GET = 'GET';
@@ -14,22 +19,22 @@
         /** @var string|null */
         protected static $userAgent = null;
 
+        /** @var string */
+        private $baseURL;
+
         /** @var string[] */
         protected $headers = [];
 
-        /** @var string */
-        protected $root;
-
-        /** @var bool */
+        /** @var bool Allows using a URL-encoded body rather than a JSON one */
         protected $encode = false;
 
-        /** @var bool */
+        /** @var bool Disables caching the result in a temporary file */
         protected $caching = true;
 
-        public function __construct(string $URL)
+        public function __construct(string $baseURL)
         {
             parent::__construct();
-            $this->root = rtrim($URL, '/') . '/';
+            $this->baseURL = rtrim($baseURL, '/') . '/';
         }
 
         protected function execute(string $URI, string $method = self::METHOD_GET, array $data = [])
@@ -40,7 +45,7 @@
                 throw new \LogicException(__CLASS__ . ' only supports GET, POST, PUT and DELETE requests');
             }
 
-            $URL = $this->root . ltrim($URI, '/');
+            $URL = $this->baseURL . ltrim($URI, '/');
 
             $context = [
                 'http' => [
@@ -53,7 +58,7 @@
                 if(is_string($key)) {
                     $context['http']['headers'] .= $key . ': ' . $value;
                 } else {
-                    $context['http']['headers'] .= $value;
+                    throw new \OutOfRangeException('Headers should be in key => value format');
                 }
 
                 $context['http']['headers'] .= "\r\n";
@@ -92,7 +97,7 @@
                 $stream = $cache;
             }
 
-            $scanner = new Scanner();
-            $parser = new Parser($stream, $scanner);
+            $result = new Item();
+            $parser = new Parser($stream, $result);
         }
     }
