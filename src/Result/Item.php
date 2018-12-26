@@ -2,6 +2,8 @@
 
     namespace PN13\FluentJSON\Result;
 
+    use http\Exception\RuntimeException;
+
     /**
      * Class Item
      * @package PN13\FluentJSON
@@ -23,12 +25,12 @@
 
         /**
          * @param string|null $name
-         * @param Result|int|float|string $value
+         * @param Result|int|float|string|bool $value
          */
         protected function set(?string $name, $value): void
         {
             if(!$name) {
-                // should throw a error
+                throw new RuntimeException('Item attributes should have a name');
             }
 
             $this->attributes[$name] = $value;

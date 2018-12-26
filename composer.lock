@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "dba286c77b0640833cbb9d374e8ec93d",
+    "content-hash": "3eec0c3b5027535485d008662cbc961a",
     "packages": [
         {
             "name": "salsify/json-streaming-parser",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/salsify/jsonstreamingparser.git",
-                "reference": "e6be3e7ab64ff7d9c9ef37d95ab03673f4625683"
+                "url": "https://github.com/ProNoob13/jsonstreamingparser.git",
+                "reference": "04624bed926101fe975fd95b93582a125b98f218"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/salsify/jsonstreamingparser/zipball/e6be3e7ab64ff7d9c9ef37d95ab03673f4625683",
-                "reference": "e6be3e7ab64ff7d9c9ef37d95ab03673f4625683",
+                "url": "https://api.github.com/repos/ProNoob13/jsonstreamingparser/zipball/04624bed926101fe975fd95b93582a125b98f218",
+                "reference": "04624bed926101fe975fd95b93582a125b98f218",
                 "shasum": ""
             },
             "require": {
@@ -40,28 +40,27 @@
                     "JsonStreamingParser\\Test\\": "tests"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
-                {
-                    "name": "Maxim Gnatenko",
-                    "email": "mgnatenko@gmail.com"
-                },
                 {
                     "name": "Rob Gonzalez",
                     "email": "rob@salsify.com",
                     "homepage": "http://salsify.com/"
                 },
                 {
-                    "name": "ThePanz",
-                    "email": "thepanz@gmail.com"
+                    "name": "Maxim Gnatenko",
+                    "email": "mgnatenko@gmail.com"
                 },
                 {
                     "name": "Max Grigorian",
                     "email": "maxakawizard@gmail.com",
                     "homepage": "http://wizardcat.com/"
+                },
+                {
+                    "name": "ThePanz",
+                    "email": "thepanz@gmail.com"
                 }
             ],
             "description": "A streaming parser for JSON in PHP.",
@@ -71,7 +70,10 @@
                 "parser",
                 "streaming"
             ],
-            "time": "2018-10-26T14:37:02+00:00"
+            "support": {
+                "source": "https://github.com/ProNoob13/jsonstreamingparser/tree/master"
+            },
+            "time": "2018-12-25T23:48:08+00:00"
         }
     ],
     "packages-dev": [
@@ -195,12 +197,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "7a430697e4a1bea94c5062c4cf4ae93683c54840"
+                "reference": "d571be7971d329837f6392d9e8207b40b36d5606"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/7a430697e4a1bea94c5062c4cf4ae93683c54840",
-                "reference": "7a430697e4a1bea94c5062c4cf4ae93683c54840",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/d571be7971d329837f6392d9e8207b40b36d5606",
+                "reference": "d571be7971d329837f6392d9e8207b40b36d5606",
                 "shasum": ""
             },
             "require": {
@@ -214,6 +216,7 @@
             },
             "require-dev": {
                 "ext-iconv": "*",
+                "symfony/console": "~3.4|~4.0",
                 "symfony/process": "~3.4|~4.0",
                 "twig/twig": "~1.34|~2.4"
             },
@@ -262,7 +265,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2018-12-17T13:49:19+00:00"
+            "time": "2018-12-24T13:39:10+00:00"
         }
     ],
     "aliases": [],
@@ -271,7 +274,9 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1.3"
+        "php": "^7.1.3",
+        "ext-http": "*",
+        "ext-json": "*"
     },
     "platform-dev": []
 }

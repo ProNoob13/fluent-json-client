@@ -2,14 +2,17 @@
 
     namespace PN13\FluentJSON\Result;
 
-    use JsonStreamingParser\Listener\ListenerInterface;
+    use JsonStreamingParser\Listener\AsyncListenerInterface;
 
     /**
      * Class Result
      * @package PN13\FluentJSON
      */
-    abstract class Result implements ListenerInterface
+    abstract class Result implements AsyncListenerInterface
     {
+        const VALUE_TYPE_OBJECT = 'object';
+        const VALUE_TYPE_ARRAY = 'array';
+
         /** @var Result|null */
         protected $parent;
 
@@ -17,13 +20,16 @@
         protected $level;
 
         /** @var int */
-        private $nested = 0;
+        private $depth = 0;
 
         /** @var string|null */
         private $key = null;
 
         /** @var Result|null */
         private $child = null;
+
+        /** @var callable */
+        private $callback;
 
         /**
          * Result constructor.
@@ -36,67 +42,44 @@
             $this->level = $level;
         }
 
-        public function startDocument(): void
+        public function setAsyncCallback(callable $callback): void
         {
-            // ignore unless overridden in child class
-        }
-
-        public function endDocument(): void
-        {
-            // ignore unless overridden in child class
+            $this->callback = $callback;
         }
 
         public function startObject(): void
         {
-            if($this->child) {
-                $this->nested++;
-                $this->child->startObject();
-            } else {
-                $this->child = new Item($this, $this->level + 1);
-            }
+            $this->startComplexValue(self::VALUE_TYPE_OBJECT);
         }
 
         public function endObject(): void
         {
-            if($this->nested) {
-                $this->child->endObject();
-                $this->nested--;
-            } else {
-                $this->endChild();
-            }
+            $this->endComplexValue(self::VALUE_TYPE_OBJECT);
         }
 
         public function startArray(): void
         {
-            if($this->child) {
-                $this->nested++;
-                $this->child->startArray();
-            } else {
-                $this->child = new Collection($this, $this->level + 1);
-            }
+            $this->startComplexValue(self::VALUE_TYPE_ARRAY);
         }
 
         public function endArray(): void
         {
-            if($this->nested) {
-                $this->child->endArray();
-                $this->nested--;
-            } else {
-                $this->endChild();
-            }
+            $this->endComplexValue(self::VALUE_TYPE_ARRAY);
         }
 
-        private function endChild(): void
+        public function startDocument(): void
         {
-            $value = $this->child;
-            $this->child = null;
+            // ignore unless overridden by child class
+        }
 
-            $this->set($this->key, $value);
+        public function endDocument(): void
+        {
+            // ignore unless overridden by child class
         }
 
         public function whitespace(string $whitespace): void
         {
-            // just ignore it
+            // ignore unless overridden by child class
         }
 
         public function key(string $key = null): void
@@ -117,9 +100,43 @@
             }
         }
 
+        protected function startComplexValue(string $type): void
+        {
+            if($this->child) {
+                $this->depth++;
+                $this->child->{'start' . ucfirst($type)}();
+            } else {
+                if($type === self::VALUE_TYPE_ARRAY) {
+                    $class = Collection::class;
+                } else {
+                    $class = Item::class;
+                }
+
+                $this->child = new $class($this, $this->level + 1);
+            }
+        }
+
+        protected function endComplexValue(string $type): void
+        {
+            if($this->depth > 0) {
+                $this->child->{'end' . ucfirst($type)}();
+                $this->depth--;
+            } else {
+                $value = $this->child;
+                $this->child = null;
+
+                $this->set($this->key, $value);
+            }
+        }
+
+        protected function proceed(): void
+        {
+            ($this->callback)();
+        }
+
         /**
          * @param string|null $name
-         * @param Result|int|float|string $value
+         * @param Result|int|float|string|bool $value
          */
         protected abstract function set(?string $name, $value): void;
     }
