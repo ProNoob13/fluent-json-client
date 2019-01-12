@@ -25,10 +25,10 @@
         /** @var string[] */
         protected $headers = ['Accept' => 'application/json'];
 
-        /** @var boolean to allow usage of a URL-encoded body rather than a JSON one */
+        /** @var boolean switch to allow usage of a URL-encoded body rather than a JSON one */
         protected $encode = false;
 
-        /** @var boolean to disable the caching of the call result in a temporary file */
+        /** @var boolean switch to disable the caching of the call result in a temporary file */
         protected $caching = true;
 
         public function __construct(string $baseURL)

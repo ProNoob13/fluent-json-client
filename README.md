@@ -10,7 +10,3 @@ A PHP library to fluently interact with JSON API's
     $request = $API->company->contact;
     $request->post(['name' => 'John Doe', 'email' => 'example@example.com']);
 ```
-
-## To Do
-- Result pagination support
-- JSON abstraction
