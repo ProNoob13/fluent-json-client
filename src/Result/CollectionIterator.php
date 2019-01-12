@@ -36,7 +36,7 @@
         /**
          * @param Result|int|float|string|bool|null $value
          */
-        public function add($value): void
+        public function enqueue($value): void
         {
             $this->next = $value;
             $this->hasNext = true;
@@ -58,6 +58,9 @@
          */
         public function next()
         {
+            // proceeding should trigger enqueue, giving us the next value if the array hasn't ended
+            $this->parent->proceed();
+
             if($this->hasNext) {
                 $this->current = $this->next;
                 $this->next = null;

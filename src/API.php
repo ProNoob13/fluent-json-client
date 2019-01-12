@@ -23,12 +23,12 @@
         private $baseURL;
 
         /** @var string[] */
-        protected $headers = [];
+        protected $headers = ['Accept' => 'application/json'];
 
-        /** @var bool Allows using a URL-encoded body rather than a JSON one */
+        /** @var boolean to allow usage of a URL-encoded body rather than a JSON one */
         protected $encode = false;
 
-        /** @var bool Disables caching the result in a temporary file */
+        /** @var boolean to disable the caching of the call result in a temporary file */
         protected $caching = true;
 
         public function __construct(string $baseURL)
@@ -47,25 +47,24 @@
 
             $URL = $this->baseURL . ltrim($URI, '/');
 
-            $context = [
+            $options = [
                 'http' => [
                     'method' => $method,
-                    'headers' => "Accept: application/json\r\n",
+                    'headers' => '',
                 ]
             ];
 
             foreach ($this->headers as $key => $value) {
                 if(is_string($key)) {
-                    $context['http']['headers'] .= $key . ': ' . $value;
+                    $key = ucwords(preg_replace('/[^A-Za-z0-9]+/', '-', $key), '-');
+                    $options['http']['headers'] .= $key . ': ' . $value . "\r\n";
                 } else {
                     throw new \OutOfRangeException('Headers should be in key => value format');
                 }
-
-                $context['http']['headers'] .= "\r\n";
             }
 
             if(self::$userAgent) {
-                $context['http']['user_agent'] = self::$userAgent;
+                $options['http']['user_agent'] = self::$userAgent;
             }
 
             if($data) {
@@ -73,14 +72,14 @@
                     $URL .= '?' . http_build_query($data);
                 } else {
                     if($this->encode) {
-                        $context['http']['content'] = json_encode($data);
+                        $options['http']['content'] = json_encode($data);
                     } else {
-                        $context['http']['content'] = http_build_str($data);
+                        $options['http']['content'] = http_build_str($data);
                     }
                 }
             }
 
-            $stream = @fopen($URL, false, stream_context_create($context));
+            $stream = @fopen($URL, false, stream_context_create($options));
 
             if(!is_resource($stream)) {
                 $error = error_get_last();

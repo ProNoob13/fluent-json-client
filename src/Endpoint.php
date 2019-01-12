@@ -68,6 +68,7 @@
         protected function execute(string $URI, string $method = API::METHOD_GET, array $data = [])
         {
             if(!$this->parent) {
+                // it shouldn't arrive here because API has a different implementation of execute()
                 throw new LogicException('Endpoint should be a child of API');
             }
 

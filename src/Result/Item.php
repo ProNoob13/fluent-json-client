@@ -20,7 +20,10 @@
 
         public function __get(string $name)
         {
-            return $this->attributes[$name];
+            $result = $this->attributes[$name];
+            unset($this->attributes[$name]); // keep the memory footprint small by caching it only until it's consumed
+
+            return $result;
         }
 
         /**
@@ -29,10 +32,16 @@
          */
         protected function set(?string $name, $value): void
         {
-            if(!$name) {
+            if(!$name || ctype_digit($name)) {
                 throw new RuntimeException('Item attributes should have a name');
             }
 
             $this->attributes[$name] = $value;
+
+            if(!$value instanceof Collection) {
+                // ignoring atrocious APIs, result JSON objects are usually small enough to cache as a whole
+                // continue reading until either the object is read in full or an array is encountered
+                $this->proceed();
+            }
         }
     }

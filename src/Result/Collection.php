@@ -21,7 +21,7 @@
         protected function set(?string $name, $value): void
         {
             if($this->iterator) {
-                $this->iterator->add($value);
+                $this->iterator->enqueue($value);
             }
         }
 
@@ -36,6 +36,10 @@
          */
         public function getIterator()
         {
-            return $this->iterator = $this->iterator ?? new CollectionIterator($this);
+            if(!$this->iterator) {
+                $this->iterator = new CollectionIterator($this);
+            }
+
+            return $this->iterator;
         }
     }
